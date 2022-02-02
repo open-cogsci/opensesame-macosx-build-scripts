@@ -1,0 +1,6 @@
+name: app-builder
+channels:
+  - conda-forge
+  - cogsci
+  - defaults
+prefix: /Users/robbertmijn/opt/anaconda3/envs/app-builder

@@ -14,7 +14,7 @@ APP_NAME = "OpenSesame"
 # The short version string
 # In this script, this value is overwritten later, because the value of OpenSesame
 # is automatically retrieved from its source code.
-VERSION = "3.3.0"
+VERSION = "3.3.10"
 # The website in reversered order (domain first, etc.)
 IDENTIFIER = "nl.cogsci.osdoc"
 # The author of this package
@@ -22,7 +22,7 @@ AUTHOR = "Sebastiaan Mathôt"
 # Full path to the anaconda environment folder to package
 # Make sure it is the full path (and not a relative one, also to the homedir with ~) so this can be
 # correctly replaced later. Conda usßes hardcoded paths, which we convert to `/Applications/<APP_NAME>`
-CONDA_ENV_PATH = "~/miniconda3/envs/os3.3"
+CONDA_ENV_PATH = "/Users/robbertmijn/opt/anaconda3/envs/opensesame"
 # Folders to include from Anaconda environment, if ommitted everything will be
 # copied
 # CONDA_FOLDERS = ["lib", "bin", "share", "qsci", "ssl", "translations"]
@@ -49,11 +49,11 @@ CONDA_EXCLUDE_FILES += map(lambda x: f'translations/{x}', [
 ])
 
 # Path to the icon of the app
-ICON_PATH = "~/Git/OpenSesame/opensesame_resources/opensesame.icns"
+ICON_PATH = "/Users/robbertmijn/OpSe/opensesame_resources/opensesame.icns"
 # The entry script of the application in the environment's bin folder
 ENTRY_SCRIPT = "opensesame"
 # Folder to place created APP and DMG in.
-OUTPUT_FOLDER = "~/EXPERIMENTAL/"
+OUTPUT_FOLDER = "~/OpSe"
 
 # Information about file types that the app can handle
 APP_SUPPORTED_FILES = {
@@ -86,7 +86,7 @@ RESOURCE_DIR = ""
 
 # Create a DMG template name, so version can be overwritten if it can be
 # determined from the OS libraries.
-os_dmg_template = 'opensesame_{}-py37-macos-1.dmg'
+os_dmg_template = 'opensesame_{}-py37-macos-x64-1.dmg'
 
 # Name of the DMG file that will be created in OUTPUT_FOLDER
 DMG_FILE = os_dmg_template.format(VERSION)
@@ -103,7 +103,7 @@ DMG_WINDOW_RECT = ((300, 200), (358, 570))
 DMG_ICON_SIZE = 80
 
 # Background of DMG file
-DMG_BACKGROUND = "~/Git/OpenSesame/opensesame_resources/einstein.png"
+DMG_BACKGROUND = "/Users/robbertmijn/OpSe/opensesame_resources/einstein.png"
 
 # ===============================================================================
 # Extra settings and functions specific to OpenSesame (Remove for other apps)
