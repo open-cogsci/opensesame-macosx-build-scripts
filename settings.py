@@ -49,11 +49,11 @@ CONDA_EXCLUDE_FILES += map(lambda x: f'translations/{x}', [
 ])
 
 # Path to the icon of the app
-ICON_PATH = "/Users/robbertmijn/OpSe/opensesame_resources/opensesame.icns"
+ICON_PATH = "/Users/robbertmijn/Documents/projecten_local/opensesame-macos-build-scripts/opensesame_resources/opensesame.icns"
 # The entry script of the application in the environment's bin folder
 ENTRY_SCRIPT = "opensesame"
 # Folder to place created APP and DMG in.
-OUTPUT_FOLDER = "~/OpSe"
+OUTPUT_FOLDER = "/Users/robbertmijn/Documents/projecten_local/opensesame-macos-build-scripts/"
 
 # Information about file types that the app can handle
 APP_SUPPORTED_FILES = {
@@ -103,7 +103,7 @@ DMG_WINDOW_RECT = ((300, 200), (358, 570))
 DMG_ICON_SIZE = 80
 
 # Background of DMG file
-DMG_BACKGROUND = "/Users/robbertmijn/OpSe/opensesame_resources/einstein.png"
+DMG_BACKGROUND = "/Users/robbertmijn/Documents/projecten_local/opensesame-macos-build-scripts/opensesame_resources/einstein.png"
 
 # ===============================================================================
 # Extra settings and functions specific to OpenSesame (Remove for other apps)
@@ -112,7 +112,7 @@ DMG_BACKGROUND = "/Users/robbertmijn/OpSe/opensesame_resources/einstein.png"
 LOCAL_LIB_FOLDER = "/usr/local/lib"
 
 # Try to obtain OpenSesame version from OpenSesame source
-os_metadata_file = os.path.expanduser(os.path.join(CONDA_ENV_PATH, 'lib', 'python3.7',
+os_metadata_file = os.path.expanduser(os.path.join(CONDA_ENV_PATH, 'lib', 'python3.11',
                                                    'site-packages', 'libopensesame', 'metadata.py'))
 try:
     with open(os_metadata_file, 'r') as fp:
