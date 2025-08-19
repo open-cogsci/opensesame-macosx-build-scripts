@@ -10,6 +10,11 @@ from pathlib import Path
 # General settings applicable to all apps
 # ===============================================================================
 
+# Configure the Python version used in the packaged environment
+PYTHON_VERSION = os.environ.get("PYTHON_VERSION", '3.13')  # e.g., "3.12", "3.13"
+PY_TAG = f"py{PYTHON_VERSION.replace('.', '')}"  # e.g., "py313"
+CONDA_ENV_NAME = f"opensesame-{PY_TAG}"          # e.g., "opensesame-py313"
+
 # Get the current user's home directory
 HOME = Path.home()
 
@@ -24,9 +29,8 @@ IDENTIFIER = "nl.cogsci.osdoc"
 # The author of this package
 AUTHOR = "Sebastiaan Mathôt"
 
-# Full path to the anaconda environment folder to package
-# Using expanduser to handle ~ and Path for cross-platform compatibility
-CONDA_ENV_PATH = str(HOME / "miniconda3/envs/opensesame")
+# Full path to the anaconda environment folder to package (based on Python version)
+CONDA_ENV_PATH = str(HOME / "miniconda3" / "envs" / CONDA_ENV_NAME)
 
 # Alternative: If you want to use conda's current environment:
 # import subprocess
@@ -104,9 +108,8 @@ RESOURCE_DIR = ""
 
 # ===== Settings specific to dmgbuild =====
 
-# Create a DMG template name, so version can be overwritten if it can be
-# determined from the OS libraries.
-os_dmg_template = 'opensesame_{}-py313-macos-x64-1.dmg'
+# Create a DMG template name, with a Python version tag (e.g., -py313-)
+os_dmg_template = f'opensesame_{{}}-{PY_TAG}-macos-x64-1.dmg'
 
 # Name of the DMG file that will be created in OUTPUT_FOLDER
 DMG_FILE = os_dmg_template.format(VERSION)
@@ -136,18 +139,25 @@ DMG_BACKGROUND = str(RESOURCES_DIR / "instructions.png")
 LOCAL_LIB_FOLDER = "/usr/local/lib"
 
 # Try to obtain OpenSesame version from OpenSesame source
-# Note: Updated to use Python 3.13 path
-os_metadata_file = os.path.join(CONDA_ENV_PATH, 'lib', 'python3.13',
-                               'site-packages', 'libopensesame', 'metadata.py')
+# Use configured Python version path, with fallback to auto-detect.
+os_metadata_file = os.path.join(
+    CONDA_ENV_PATH, 'lib', f'python{PYTHON_VERSION}', 'site-packages', 'libopensesame', 'metadata.py'
+)
 
 # Auto-detect Python version if needed
 if not os.path.exists(os_metadata_file):
-    # Try to find the correct Python version
+    # Try to find the correct Python version by scanning lib/python*
     lib_path = Path(CONDA_ENV_PATH) / 'lib'
-    python_dirs = [d for d in lib_path.iterdir() if d.is_dir() and d.name.startswith('python')]
+    try:
+        python_dirs = sorted(
+            [d for d in lib_path.iterdir() if d.is_dir() and d.name.startswith('python')],
+            key=lambda p: p.name,
+            reverse=True
+        )
+    except Exception:
+        python_dirs = []
     if python_dirs:
-        python_version = python_dirs[0].name
-        os_metadata_file = str(lib_path / python_version / 'site-packages' / 'libopensesame' / 'metadata.py')
+        os_metadata_file = str(python_dirs[0] / 'site-packages' / 'libopensesame' / 'metadata.py')
 
 try:
     with open(os_metadata_file, 'r') as fp:
@@ -171,7 +181,6 @@ else:
 
     print(f"Creating app for {APP_NAME} {LONG_VERSION}")
 
-
 def extra():
     """Called after copying conda env to perform OpenSesame-specific modifications"""
     # Copy the opensesame entry script to a file with the .py extension
@@ -181,7 +190,6 @@ def extra():
     compose_qtconf()
     # Fix some hardcoded conda paths
     fix_paths()
-
 
 def fix_paths():
     """Fix hardcoded paths in Jupyter kernel configuration"""
@@ -195,10 +203,9 @@ def fix_paths():
         with open(kernel_json, 'w+') as fp:
             json.dump(kernelCfg, fp, indent=2)
 
-
 def compose_qtconf():
     """Create qt.conf files to help Qt find resources within the app bundle
-    
+
     The QtWebEngineProcess uses its own qt.conf and ignores the general one,
     so a separate one is created for QtWebEngineProcess in the libexec dir.
     """
@@ -227,7 +234,6 @@ Translations = translations
     with open(qtconf_wep, "w+") as f:
         f.write(contents_wep)
 
-
 def copy_opensesame_with_py_ext():
     """Copy bin/opensesame to bin/opensesame.py to enable multiprocessing"""
     try:
@@ -237,7 +243,6 @@ def copy_opensesame_with_py_ext():
         )
     except IOError as e:
         print(f"Could not copy opensesame to opensesame.py: {e}")
-
 
 def cleanup_conda():
     """Remove unnecessary files from the conda environment (currently unused)"""

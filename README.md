@@ -24,6 +24,6 @@ conda deactivate
 Next, run the packaging script to build a `.dmg` package.
 
 ```
-python conda_env_to_app.py settings.py --clear --build --dmg
+export PYTHON_VERSION="3.10" ; python conda_env_to_app.py settings.py --clear --build --dmg
 ````
 
